@@ -39,6 +39,22 @@ class WorkOrderResource extends Resource
 
     protected static ?int $navigationSort = 0;
 
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::whereIn('status', [
+            WorkOrderStatus::Queued->value,
+            WorkOrderStatus::InProgress->value,
+            WorkOrderStatus::ReadyForPayment->value,
+        ])->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

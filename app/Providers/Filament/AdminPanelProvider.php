@@ -10,7 +10,13 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
+use App\Filament\Widgets\StatsOverviewWidget;
+use App\Filament\Widgets\QuickActionWidget;
+use App\Filament\Widgets\LatestWorkOrdersWidget;
+use App\Filament\Widgets\SalesChartWidget;
+use App\Filament\Widgets\LowStockAlertWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -27,11 +33,28 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('POS Bengkel Multi-Cabang')
+            ->brandName('MOTOFIX POS Bengkel')
+            ->brandLogo(fn () => view('filament.components.brand-logo'))
+            ->brandLogoHeight('2.6rem')
+            ->font('Plus Jakarta Sans')
+            ->favicon('/favicon.ico')
             ->colors([
                 'primary' => Color::Indigo,
+                'gray' => Color::Slate,
+                'info' => Color::Sky,
+                'success' => Color::Emerald,
+                'warning' => Color::Amber,
+                'danger' => Color::Rose,
             ])
+            ->maxContentWidth(MaxWidth::Full)
             ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('17.5rem')
+            ->collapsedSidebarWidth('5rem')
+            ->spa()
+            ->renderHook(
+                'panels::head.end',
+                fn () => view('filament.custom-styles')
+            )
             ->navigationGroups([
                 'Layanan & Bengkel',
                 'Manajemen Inventori & Gudang',
@@ -44,10 +67,12 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                StatsOverviewWidget::class,
+                QuickActionWidget::class,
+                LatestWorkOrdersWidget::class,
+                SalesChartWidget::class,
+                LowStockAlertWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
