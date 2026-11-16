@@ -25,7 +25,7 @@ class SalesChartWidget extends ChartWidget
             $days[] = $date->translatedFormat('D, d M');
             $sales[] = (float) Sale::whereDate('created_at', $date)
                 ->where('status', 'completed')
-                ->sum('final_amount');
+                ->sum('grand_total');
         }
 
         return [

@@ -23,11 +23,11 @@ class StatsOverviewWidget extends BaseWidget
         // 1. Total Penjualan Hari Ini
         $todaySales = Sale::whereDate('created_at', $today)
             ->where('status', 'completed')
-            ->sum('final_amount');
+            ->sum('grand_total');
 
         $yesterdaySales = Sale::whereDate('created_at', $yesterday)
             ->where('status', 'completed')
-            ->sum('final_amount');
+            ->sum('grand_total');
 
         $growth = $yesterdaySales > 0 
             ? round((($todaySales - $yesterdaySales) / $yesterdaySales) * 100, 1) 
@@ -41,7 +41,7 @@ class StatsOverviewWidget extends BaseWidget
             $date = Carbon::today()->subDays($i);
             $sparkline[] = (float) Sale::whereDate('created_at', $date)
                 ->where('status', 'completed')
-                ->sum('final_amount');
+                ->sum('grand_total');
         }
 
         // 2. PKB Aktif (Queued, In Progress, Ready for Payment)
